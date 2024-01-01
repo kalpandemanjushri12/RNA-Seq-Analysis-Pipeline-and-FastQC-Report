@@ -1,2 +1,2 @@
 # NGS_WORK
-Here are the files of RNA Seq tools installation on which I have worked.
+Here are my few sample files of my work
