@@ -4,7 +4,7 @@ SECONDS=0
 
 #running fastqc on our fastq files which we have alredy downloaded by fasterq-dump
 #changing directory
-#cd /home/mkalpande/rna_seq_script
+cd /home/mkalpande/rna_seq_script
 path1=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/SRR504382_1.fastq
 path2=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/SRR504382_2.fastq
 path3=/home/mkalpande/TOOLS/FastQC/SRR11214459.fastq
