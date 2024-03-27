@@ -36,7 +36,7 @@ echo "hisat alignment run sucessfully"
 #sorting sam file and generate bam file
 #giving paths
 index_file=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/hisat_mouse_indexes
-#cd /home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files
+cd /home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files
 
 hist_sam=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/dta_hisat_alignment.sam
 hist_bam=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/dta_hisat.bam
