@@ -1,2 +1,2 @@
 # NGS_WORK
-I have posted few sample files of my work which I have worked during RNA-sequencing processing. 
+I have posted a sample file of my work along with my bash script which I have worked during RNA-sequencing processing. 
