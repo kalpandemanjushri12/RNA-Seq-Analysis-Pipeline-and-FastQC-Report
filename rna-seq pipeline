@@ -8,6 +8,7 @@ cd /home/mkalpande/rna_seq_script
 path1=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/SRR504382_1.fastq
 path2=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/SRR504382_2.fastq
 path3=/home/mkalpande/TOOLS/FastQC/SRR11214459.fastq
+path4=/home/mkalpande/mm39_genefile.gtf
 
 #STEP 1: RUN FASTQC *(WORKS)
 qc_path=/home/mkalpande/rna_seq_script/fastqc_output/SRR504382_2_fastqc.html
@@ -15,30 +16,32 @@ qc_path=/home/mkalpande/rna_seq_script/fastqc_output/SRR504382_2_fastqc.html
 fastqc -o fastqc_output  ${path3} #${path1} #${path2}
 echo "fastqc run succesfully"
 
-#STEP 2: RUN TRIMMOMATIC (if reads are of bad quality)
+#STEP 2: RUN TRIMMOMATIC (if reads are of bad quality) *(WORK)
 java -jar /home/mkalpande/TOOLS/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 ${path2} trimmed.fastq TRAILING:2
 PE java -jar /home/mkalpande/TOOLS/Trimmomatic-0.39/trimmomatic-0.39.jar -phred33 trimmed.fastq TRAILING:2
 echo "trimmomatic run succesfully"
 
 #STEP 3:RUNNING HISAT2 *(WORKS)
-building index of mouse
+#building index of mouse
 genome=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/mm39.fa
 hisat2-build ${genome} hisat_mouse1
 echo "mouse indexes build succesfully"
 
 #run allignment *(WORKS)
 hisat_mp1=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/hisat_mouse
-path1 and path2 above
+#path1 and path2 above
 hisat2 --dta -p 4 -x ${hisat_mp1} -1 ${path1} -2 ${path2} -S dta_hisat_alignment.sam
-#echo "hisat alignment run sucessfully"
+echo "hisat alignment run sucessfully"
 
 #sorting sam file and generate bam file
 #giving paths
-#index_file=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/hisat_mouse_indexes
-cd /home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files
+index_file=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/hisat_mouse_indexes
+#cd /home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files
+
 hist_sam=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/dta_hisat_alignment.sam
 hist_bam=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/dta_hisat.bam
 hist_sort_bam=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/dta_hisat_sort.bam
+
 samtools view -bS ${hist_sam} > dta_hisat.bam
 echo "sam file sorted to bam succesfully"
 
@@ -50,8 +53,27 @@ echo "bam to sorted bam succesfully"
 samtools index dta_hisat_sorted.bam
 echo "bam file indexed succesfully"
 
+#STEP 4:Using STRINGTIE for transcript qunatification
+#using stringtie
+#changing directory #running stringtie
+cd /home/mkalpande/TOOLS/stringtie-2.2.1/final_stringtie_output
+stringtie -p 4 -G ${path4} -o alt_splice_out2.gtf /home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/dta_hisat_sorted.bam
+echo "output file generated succesfully"
+
+#running stringtie with additional options for isoforms study
+stringtie -p 4 -G ${path4} -o output_transcripts2.gtf -l mylabel -f 0.01 -m 200 -a 10 -j 1 -t /home/mkalpande/TOOLS/hisat2-2.2.1/his>.1/hisat2_index_files/dta_hisat_sorted.bam
+#using merge command to get all the necessary files of stringtie in one file only
+stringtie --merge -p 4 -o merged_output3.gtf -G ${path4} /home/mkalpande/TOOLS/stringtie-2.2.1/final_stringtie_output/merge.txt
+echo "merged file generated succesfully"
+
+#adding ballgown command to get DEG data
+path5 =/home/mkalpande/TOOLS/stringtie-2.2.1/final_stringtie_output/merged_output3.gtf
+path6 =/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/dta_hisat_sorted.bam #path to dta_bam_file
+
+stringtie -B -e -p 4 -G ${path5} -o /home/mkalpande/TOOLS/stringtie-2.2.1/final_stringtie_output/ballgown ballgown_output.gtf ${path>echo "ballgown file generated succesfully"
+
+#to obtain a statistical file
+gffcompare -R -r ${path4} -o stringe_compare/str_compare /home/mkalpande/TOOLS/stringtie-2.2.1/final_stringtie_output/merged_output3>echo "gffcompare file generated succesfully"
 
 duration=$SECONDS
 echo "$(($duration /60)) minutes and $(($duration % 60)) seconds elapsed."
-
-
