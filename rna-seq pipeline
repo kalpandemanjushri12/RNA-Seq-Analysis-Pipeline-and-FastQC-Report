@@ -10,24 +10,24 @@ path2=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/SRR504382_2.fastq
 path3=/home/mkalpande/TOOLS/FastQC/SRR11214459.fastq
 path4=/home/mkalpande/mm39_genefile.gtf
 
-#STEP 1: RUN FASTQC *(WORKS)
+#STEP 1: RUN FASTQC 
 qc_path=/home/mkalpande/rna_seq_script/fastqc_output/SRR504382_2_fastqc.html
 
 fastqc -o fastqc_output  ${path3} #${path1} #${path2}
 echo "fastqc run succesfully"
 
-#STEP 2: RUN TRIMMOMATIC (if reads are of bad quality) *(WORK)
+#STEP 2: RUN TRIMMOMATIC (if reads are of bad quality) 
 java -jar /home/mkalpande/TOOLS/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 ${path2} trimmed.fastq TRAILING:2
 PE java -jar /home/mkalpande/TOOLS/Trimmomatic-0.39/trimmomatic-0.39.jar -phred33 trimmed.fastq TRAILING:2
 echo "trimmomatic run succesfully"
 
-#STEP 3:RUNNING HISAT2 *(WORKS)
+#STEP 3:RUNNING HISAT2 
 #building index of mouse
 genome=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/mm39.fa
 hisat2-build ${genome} hisat_mouse1
 echo "mouse indexes build succesfully"
 
-#run allignment *(WORKS)
+#run allignment 
 hisat_mp1=/home/mkalpande/TOOLS/hisat2-2.2.1/hisat2_index_files/hisat_mouse
 #path1 and path2 above
 hisat2 --dta -p 4 -x ${hisat_mp1} -1 ${path1} -2 ${path2} -S dta_hisat_alignment.sam
