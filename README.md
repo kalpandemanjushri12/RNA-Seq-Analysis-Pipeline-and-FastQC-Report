@@ -1,2 +1,2 @@
-# NGS_WORK
-I have posted a sample file of my work along with my bash script which I have worked during RNA-sequencing processing. 
+# RNA-Seq pipline
+In this repository, you will find a comprehensive pipeline for the complete analysis of RNA sequencing (RNA-Seq) data. This pipeline automates the entire process, from performing quality control checks with FastQC to conducting quantitative analysis with StringTie. Developed using Bash scripting on a Linux system, the workflow is designed to streamline RNA-Seq data analysis by eliminating the need for manual execution of individual steps. This automated approach significantly reduces processing time and enhances reproducibility, providing a robust solution for RNA-Seq analysis.
